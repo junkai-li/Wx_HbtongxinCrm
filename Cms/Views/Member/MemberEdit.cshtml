@@ -1,0 +1,122 @@
+﻿@model TMember
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>编辑客户信息</title>
+
+    <script src="~/lib/jquery.js"></script>
+    <link href="~/lib/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/lib/layui/layui.js"></script>
+
+    <script>
+        $(function () {// 初始化内容
+            layui.use('element', function () {
+                var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+            });
+
+            layui.use('form', function () {
+                var form = layui.form;
+
+                //监听提交
+                form.on('submit(form1)', function (data) {
+
+                    $.ajax({
+                        //几个参数需要注意一下
+                        type: "POST",//方法类型
+                        url: "/Member/MemberSave/",
+                        data: $('#form1').serialize(),
+                        success: function (result) {
+                            if (result == true) {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.onloadDataTable();
+                                parent.layer.close(index);
+                            };
+                        }
+                    });
+
+                    return false;
+                });
+            });
+        });
+    </script>
+</head>
+
+<body style="padding-right:1.0em;padding-left: 1.0em;">
+    <form method="post" id="form1" class="layui-form">
+
+        <input type="hidden" value="@Model.Id" name="Id" />
+
+        <div class="layui-tab" style="margin-top:24px">
+
+            <div class="layui-tab-content" style="border:1px solid #e6e6e6;padding-top:25px">
+                <div class="layui-tab-item layui-show">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">课程名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="CourseName" value="@Model.CourseName" required lay-verify="required" lay-reqText="请输入课程名称" placeholder="请输入课程名称" autocomplete="off" class="layui-input" style="width:30em">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">课程次数</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="CourseCount" value="@Model.CourseCount" required lay-verify="required" lay-reqText="请输入课程次数" placeholder="请输入课程次数" autocomplete="off" class="layui-input" style="width:30em">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">家长名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ParentName" value="@Model.ParentName"   lay-reqText="请输入家长名称" placeholder="请输入家长名称" autocomplete="off" class="layui-input" style="width:30em">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">小孩名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ChildName" value="@Model.ChildName" required lay-verify="required" lay-reqText="请输入小孩名称" placeholder="请输入小孩名称" autocomplete="off" class="layui-input" style="width:30em">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">学校名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="SchoolName" value="@Model.SchoolName" required lay-verify="required" lay-reqText="请输入学校名称" placeholder="请输入学校名称" autocomplete="off" class="layui-input" style="width:30em">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">班级名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Class" value="@Model.Class" required lay-verify="required" lay-reqText="请输入班级名称" placeholder="请输入班级名称" autocomplete="off" class="layui-input" style="width:30em">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" required lay-verify="required|phone" lay-reqText="请输入电话" placeholder="请输入电话" autocomplete="off" class="layui-input" style="width:30em">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                             
+                                    <textarea name="Remarks" placeholder="请输入备注" class="layui-textarea" style="width:40em;height:3em">@Model.Remarks</textarea> 
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="position: fixed;bottom:10px;display:none">
+            <button type="submit" id="submit" lay-filter="form1" lay-submit class="layui-btn layui-btn-normal">提交保存</button>
+            <button type="button" class="layui-btn layui-btn-primary" onclick="javascript: history.back(-1);">返回上一页</button>
+        </div>
+
+    </form>
+</body>
+</html>

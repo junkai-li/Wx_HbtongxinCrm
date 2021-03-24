@@ -36,6 +36,11 @@ namespace Repository.Database
         /// <summary>
         /// 课程次数
         /// </summary>
-        public int CourseCount { get; set; } 
+        public int CourseCount { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remarks { get; set; }
     }
 }

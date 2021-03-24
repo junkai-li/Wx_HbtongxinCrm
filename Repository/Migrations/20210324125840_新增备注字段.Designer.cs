@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Database;
 
 namespace Repository.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20210324125840_新增备注字段")]
+    partial class 新增备注字段
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1367,17 +1369,9 @@ namespace Repository.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("createtime");
 
-                    b.Property<Guid>("CreateUserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("createuserid");
-
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("datetime2")
                         .HasColumnName("deletetime");
-
-                    b.Property<Guid?>("DeleteUserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("deleteuserid");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit")
@@ -1387,17 +1381,7 @@ namespace Repository.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("updatetime");
 
-                    b.Property<Guid?>("UpdateUserId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("updateuserid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreateUserId");
-
-                    b.HasIndex("DeleteUserId");
-
-                    b.HasIndex("UpdateUserId");
 
                     b.ToTable("t_wechatnopublictemplate");
                 });
@@ -1875,31 +1859,6 @@ namespace Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Repository.Database.TWeChatNoPublicTemplate", b =>
-                {
-                    b.HasOne("Repository.Database.TUser", "CreateUser")
-                        .WithMany()
-                        .HasForeignKey("CreateUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Repository.Database.TUser", "DeleteUser")
-                        .WithMany()
-                        .HasForeignKey("DeleteUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Repository.Database.TUser", "UpdateUser")
-                        .WithMany()
-                        .HasForeignKey("UpdateUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CreateUser");
-
-                    b.Navigation("DeleteUser");
-
-                    b.Navigation("UpdateUser");
                 });
 
             modelBuilder.Entity("Repository.Database.TCategory", b =>
