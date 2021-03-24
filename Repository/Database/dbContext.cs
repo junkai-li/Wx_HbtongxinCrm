@@ -112,7 +112,10 @@ namespace Repository.Database
         public DbSet<TWeiXinKey> TWeiXinKey { get; set; }
 
 
-
+        public DbSet<TMember> TMember { get; set; }
+        public DbSet<TMemberWxPhone> TMemberWxPhone { get; set; }
+        public DbSet<TMemberWxPhoneMessgeLog> TMemberWxPhoneMessgeLog { get; set; }
+        public DbSet<TWeChatNoPublicTemplate> TWeChatNoPublicTemplate { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -120,7 +123,7 @@ namespace Repository.Database
             if (!optionsBuilder.IsConfigured)
             {
 
-                //optionsBuilder.UseSqlServer("Data Source=127.0.0.1;Initial Catalog=webcore;User ID=sa;Password=123456", o => o.MigrationsHistoryTable("__efmigrationshistory"));
+                optionsBuilder.UseSqlServer("Data Source=42.192.118.66;Initial Catalog=MemberDb;User ID=MemberDbUser;Password=admin123", o => o.MigrationsHistoryTable("__efmigrationshistory"));
                 //optionsBuilder.UseMySQL("server=127.0.0.1;userid=root;pwd=123456;database=webcore;", o => o.MigrationsHistoryTable("__efmigrationshistory"));
                 //optionsBuilder.UseSqlite("Data Source=../Repository/database.db", o => o.MigrationsHistoryTable("__efmigrationshistory"));
                 //optionsBuilder.UseNpgsql("Host=127.0.0.1;Database=webcore;Username=postgres;Password=123456", o => o.MigrationsHistoryTable("__efmigrationshistory"));
