@@ -15,7 +15,12 @@
     <link href="~/lib/layui/css/layui.css" rel="stylesheet" />
     <script src="~/lib/datatables/datatables.min.js"></script>
     <link href="~/lib/datatables/datatables.min.css" rel="stylesheet" />
-
+    <style>
+        select {
+            padding: 5px;
+            margin: 5px 0px;
+        }
+    </style>
     <script>
 
         function DeleteUser(id) {
@@ -59,23 +64,27 @@
                     });
                 }
             });
-        }
+        } 
 
         function GetUserList() {
 
             $('#dtList').DataTable().destroy();
 
+            var myselect = document.getElementById("CoursePackageId"); 
+
+            var value = myselect.options[myselect.selectedIndex].value;
+
             $("#dtList").DataTable({
                 "ajax": {
-                    url: "/Member/GetMemberList",
+                    url: "/Member/GetMemberList?select=" + value,
                     type: "get",
                 },
                 "columns": [
                     { "data": "schoolName" },
                     { "data": "class" },
                     { "data": "parentName" },
-                    { "data": "childName" }, 
-                    { "data": "courseName" },
+                    { "data": "childName" },
+                    { "data": "coursePackage.name" },
                     { "data": "courseCount" },
                     { "data": "phoneNumber" },
                     { "data": "createTime" },
@@ -90,11 +99,11 @@
                             return "<a href=\"javascript:showUserEdit('" + data.id + "')\">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"javascript:DeleteUser('" + data.id + "');\"'>删除</a>";
                         }
                     }
-                      ,{
+                    , {
                         "orderable": false,
                         "targets": [10],
                         "render": function (data, type, row) {
-                            return '<a href="http://www.layui.com" class="layui-btn">上课</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.layui.com" class="layui-btn">未上课</a>';
+                            return '<a href="http://www.layui.com" style="height: 25px;line-height: 25px;" class="layui-btn">上课</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.layui.com" style="height: 25px;line-height: 25px;" class="layui-btn">未上课</a>';
                         }
                     }
                 ],
@@ -160,12 +169,23 @@
         </div>
         <hr class="layui-bg-cyan" style="margin-top:8px">
 
-        <div style="margin-top:10px">
+        <div style="margin-top: 10px;">
             <button type="button" class="layui-btn" onclick="showUserEdit('')">
                 <i class="layui-icon">&#xe608;</i> 新增
             </button>
-        </div>
+            <div>
+                <select id="CoursePackageId" required onchange=" GetUserList()" lay-verify="required" name="CoursePackageId">
+                    <option value="">全部</option>
+                    @{
+                        foreach (var item in (List<TCoursePackage>)ViewData["coursePackageList"])
+                        {
+                            <option value="@item.Id">@item.Name</option>
 
+                        }
+                    }
+                </select>
+            </div>
+        </div>
 
 
         <div style="margin-top:-2.3em">

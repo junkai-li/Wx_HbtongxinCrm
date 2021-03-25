@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Database;
 
 namespace Repository.Migrations
 {
     [DbContext(typeof(dbContext))]
-    partial class dbContextModelSnapshot : ModelSnapshot
+    [Migration("20210325134924_新增课程表")]
+    partial class 新增课程表
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -683,9 +685,9 @@ namespace Repository.Migrations
                         .HasColumnType("int")
                         .HasColumnName("coursecount");
 
-                    b.Property<Guid?>("CoursePackageId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("coursepackageid");
+                    b.Property<string>("CourseName")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("coursename");
 
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("datetime2")
@@ -732,8 +734,6 @@ namespace Repository.Migrations
                         .HasColumnName("updateuserid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CoursePackageId");
 
                     b.HasIndex("CreateUserId");
 
@@ -1731,11 +1731,6 @@ namespace Repository.Migrations
 
             modelBuilder.Entity("Repository.Database.TMember", b =>
                 {
-                    b.HasOne("Repository.Database.TCoursePackage", "CoursePackage")
-                        .WithMany()
-                        .HasForeignKey("CoursePackageId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Repository.Database.TUser", "CreateUser")
                         .WithMany()
                         .HasForeignKey("CreateUserId")
@@ -1751,8 +1746,6 @@ namespace Repository.Migrations
                         .WithMany()
                         .HasForeignKey("UpdateUserId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CoursePackage");
 
                     b.Navigation("CreateUser");
 

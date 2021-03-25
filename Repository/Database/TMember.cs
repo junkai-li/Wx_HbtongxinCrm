@@ -32,7 +32,12 @@ namespace Repository.Database
         /// <summary>
         ///   课程名称
         /// </summary>
-        public string CourseName { get; set; }
+        public Guid? CoursePackageId { get; set; } 
+        /// <summary>
+        ///   课程名称
+        /// </summary>
+        public TCoursePackage CoursePackage { get; set; }
+         
         /// <summary>
         /// 课程次数
         /// </summary>

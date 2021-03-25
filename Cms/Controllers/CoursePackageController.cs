@@ -9,62 +9,43 @@ using System.Threading.Tasks;
 
 namespace Cms.Controllers
 {
-    public class MemberController : Controller
+    public class CoursePackageController : Controller
     {
         public IActionResult Index()
         {
-            using (var db = new dbContext())
-            {
-                List<TCoursePackage> coursePackageList = db.TCoursePackage.Where(x => x.IsDelete == false).ToList();
-                ViewData["coursePackageList"] = coursePackageList;
-                return View();
-            }
-          
+            return View();
         }
 
         [HttpGet]
-        public JsonResult GetMemberList(int start, int length,string select)
+        public JsonResult GetCourseList(int start, int length)
         {
             using (var db = new dbContext())
             {
                 var search = Request.Query["search[value]"].ToString();
-                var query = db.TMember.Include(x=>x.CoursePackage).Include(x => x.CreateUser).Where(t => t.IsDelete == false);
+                var query = db.TCoursePackage.Include(x => x.CreateUser).Where(t => t.IsDelete == false);
                 var recordsTotal = query.Count();
                 if (!string.IsNullOrEmpty(search))
                 {
-                    query = query.Where(t => t.ChildName.Contains(search) || t.ParentName.Contains(search) || t.PhoneNumber.Contains(search) || t.CoursePackage.Name.Contains(search) || t.SchoolName.Contains(search));
-                }
-                if (!string.IsNullOrEmpty(select))
-                {
-                    query = query.Where(t => t.CoursePackageId== Guid.Parse(select));
+                    query = query.Where(t => t.Name.Contains(search));
                 }
                 var recordsFiltered = query.Count();
 
                 var list = query.Where(t => t.IsDelete == false).OrderBy(t => t.CreateTime).Skip(start).Take(length).ToList();
-       
                 return Json(new { data = list, recordsTotal = recordsTotal, recordsFiltered = recordsFiltered });
             }
         }
-        public IActionResult MemberEdit(Guid id)
+        public IActionResult CourseEdit(Guid id)
         {
 
             if (id == default)
             {
-                using (var db = new dbContext())
-                {
-                    List<TCoursePackage> coursePackageList = db.TCoursePackage.Where(x => x.IsDelete == false).ToList();
-                    ViewData["coursePackageList"] = coursePackageList;
-
-                    return View(new TMember());
-                }
+                return View(new TCoursePackage());
             }
             else
             {
                 using (var db = new dbContext())
                 {
-                    List<TCoursePackage> coursePackageList = db.TCoursePackage.Where(x => x.IsDelete == false).ToList();
-                    ViewData["coursePackageList"] = coursePackageList;
-                    var UserSys = db.TMember.Where(t => t.Id == id).FirstOrDefault();
+                    var UserSys = db.TCoursePackage.Where(t => t.Id == id).FirstOrDefault();
                     return View(UserSys);
                 }
             }
@@ -72,7 +53,7 @@ namespace Cms.Controllers
         }
 
 
-        public bool MemberSave(TMember user)
+        public bool CourseSave(TCoursePackage user)
         {
             var userid = Guid.Parse(HttpContext.Session.GetString("userid"));
             using (var db = new dbContext())
@@ -85,22 +66,16 @@ namespace Cms.Controllers
                     user.IsDelete = false;
                     user.CreateTime = DateTime.Now;
                     user.CreateUserId = userid;
-                    db.TMember.Add(user);
+                    db.TCoursePackage.Add(user);
                 }
                 else
                 {
                     //执行修改
-                    var dbUserSys = db.TMember.Where(t => t.Id == user.Id).FirstOrDefault();
+                    var dbUserSys = db.TCoursePackage.Where(t => t.Id == user.Id).FirstOrDefault();
 
-                    dbUserSys.SchoolName = user.SchoolName;
-                    dbUserSys.PhoneNumber = user.PhoneNumber;
-                    dbUserSys.ParentName = user.ParentName;
-                    dbUserSys.ChildName = user.ChildName;
-                    dbUserSys.CourseCount = user.CourseCount;
-                    dbUserSys.CoursePackageId = user.CoursePackageId;
+                    dbUserSys.Name = user.Name;
                     dbUserSys.UpdateTime = user.UpdateTime;
                     dbUserSys.UpdateUserId = userid;
-                    dbUserSys.Remarks = user.Remarks;
                 }
 
                 db.SaveChanges();
@@ -108,12 +83,12 @@ namespace Cms.Controllers
             }
         }
 
-        public JsonResult MemberDelete(Guid id)
+        public JsonResult CourseDelete(Guid id)
         {
             using (var db = new dbContext())
             {
                 var userid = Guid.Parse(HttpContext.Session.GetString("userid"));
-                var user = db.TMember.Where(t => t.Id == id).FirstOrDefault();
+                var user = db.TCoursePackage.Where(t => t.Id == id).FirstOrDefault();
 
                 user.IsDelete = true;
                 user.DeleteTime = DateTime.Now;

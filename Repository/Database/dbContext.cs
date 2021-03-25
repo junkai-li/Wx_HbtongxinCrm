@@ -117,6 +117,8 @@ namespace Repository.Database
         public DbSet<TMemberWxPhoneMessgeLog> TMemberWxPhoneMessgeLog { get; set; }
         public DbSet<TWeChatNoPublicTemplate> TWeChatNoPublicTemplate { get; set; }
 
+        public DbSet<TCoursePackage> TCoursePackage { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 

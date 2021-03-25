@@ -1,7 +1,7 @@
 ﻿@model TMember
 @{
-    Layout = null;
-}
+    Layout = null; 
+} 
 
 <!DOCTYPE html>
 
@@ -55,13 +55,34 @@
 
             <div class="layui-tab-content" style="border:1px solid #e6e6e6;padding-top:25px">
                 <div class="layui-tab-item layui-show">
-
                     <div class="layui-form-item">
                         <label class="layui-form-label">课程名称</label>
                         <div class="layui-input-block">
-                            <input type="text" name="CourseName" value="@Model.CourseName" required lay-verify="required" lay-reqText="请输入课程名称" placeholder="请输入课程名称" autocomplete="off" class="layui-input" style="width:30em">
+                            <div style="width:190px">
+                                <select id="slt_category" required lay-verify="required"  name="CoursePackageId"> 
+                                    @{ 
+                                        foreach (var item in (List<TCoursePackage>)ViewData["coursePackageList"])
+                                        {
+                                            if (Model.CoursePackageId == item.Id)
+                                            {
+                                                <option value="@item.Id" selected="selected">@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
                         </div>
                     </div>
+                    @*<div class="layui-form-item">
+                            <label class="layui-form-label">课程名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="CourseName" value="@Model.CourseName" required lay-verify="required" lay-reqText="请输入课程名称" placeholder="请输入课程名称" autocomplete="off" class="layui-input" style="width:30em">
+                            </div>
+                        </div>*@
                     <div class="layui-form-item">
                         <label class="layui-form-label">课程次数</label>
                         <div class="layui-input-block">
@@ -71,7 +92,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">家长名称</label>
                         <div class="layui-input-block">
-                            <input type="text" name="ParentName" value="@Model.ParentName"   lay-reqText="请输入家长名称" placeholder="请输入家长名称" autocomplete="off" class="layui-input" style="width:30em">
+                            <input type="text" name="ParentName" value="@Model.ParentName" lay-reqText="请输入家长名称" placeholder="请输入家长名称" autocomplete="off" class="layui-input" style="width:30em">
                         </div>
                     </div>
 
@@ -102,9 +123,9 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">备注</label>
                         <div class="layui-input-block">
-                             
-                                    <textarea name="Remarks" placeholder="请输入备注" class="layui-textarea" style="width:40em;height:3em">@Model.Remarks</textarea> 
-                           
+
+                            <textarea name="Remarks" placeholder="请输入备注" class="layui-textarea" style="width:40em;height:3em">@Model.Remarks</textarea>
+
                         </div>
                     </div>
                 </div>

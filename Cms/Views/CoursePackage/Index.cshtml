@@ -6,7 +6,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>客户管理</title>
+    <title>课程管理</title>
 
     <script src="~/lib/jquery.js"></script>
     <script src="~/lib/layui/layui.js"></script>
@@ -33,7 +33,7 @@
 
                     $.ajax({
                         type: "POST",//方法类型
-                        url: "/Wexin/WexinDelete/",
+                        url: "/CoursePackage/CourseDelete/",
                         data: dataJson,
                         success: function (data) {
                             if (data.status == true) {
@@ -67,15 +67,14 @@
 
             $("#dtList").DataTable({
                 "ajax": {
-                    url: "/Wexin/GetWeChatNoPubliList",
+                    url: "/CoursePackage/GetCourseList",
                     type: "get",
                 },
-                "columns": [ 
-                    { "data": "content" },
+                "columns": [
+                    { "data": "name" },
                     { "data": "createTime" },
                     { "data": "createUser.name" },
-                    { "data": null },
-                    { "data": null }
+                    { "data": null }, 
                 ],
                 "columnDefs": [
                     {
@@ -83,13 +82,6 @@
                         "targets": [3],
                         "render": function (data, type, row) {
                             return "<a href=\"javascript:showUserEdit('" + data.id + "')\">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"javascript:DeleteUser('" + data.id + "');\"'>删除</a>";
-                        }
-                    },
-                    {
-                        "orderable": false,
-                        "targets": [4],
-                        "render": function (data, type, row) {
-                            return '<a href="http://www.layui.com" style="height: 25px;line-height: 25px;" class="layui-btn">发送通知</a>';
                         }
                     }
                 ],
@@ -127,9 +119,9 @@
 
             layer.open({
                 type: 2,
-                area: ['900px', '645px'],
-                title: "信息",
-                content: "/Wexin/WexinEdit?id=" + userId,
+                area: ['600px', '445px'],
+                title: "课程信息",
+                content: "/CoursePackage/CourseEdit?id=" + userId,
                 btn: ['保存', '取消'],
                 yes: function (index, layero) {
                     var id = 'layui-layer-iframe' + index;
@@ -149,8 +141,8 @@
 
                 <a href="javascript:history.back(-1);">返回上一页</a>
                 <a href="/Home/Center/">首页</a>
-                <a href="">公众号管理</a>
-                <a><cite>群发通知管理</cite></a>
+                <a href="">课程管理</a>
+                <a><cite>课程套餐管理</cite></a>
             </span>
         </div>
         <hr class="layui-bg-cyan" style="margin-top:8px">
@@ -167,11 +159,10 @@
             <table class="table table-striped table-bordered" data-toggle="table" id="dtList" style="width:100%">
                 <thead>
                     <tr>
-                        <th width="20%">内容</th>
+                        <th width="20%">课程名称</th>
                         <th width="10%">创建时间</th>
                         <th width="10%">创建人</th>
-                        <th width="15%">操作</th>
-                        <th width="10%">操作</th>
+                        <th width="15%">操作</th> 
                     </tr>
                 </thead>
 
