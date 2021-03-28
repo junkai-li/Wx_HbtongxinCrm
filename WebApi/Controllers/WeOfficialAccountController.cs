@@ -70,40 +70,55 @@ namespace WebApi.Controllers
                                 {
                                     return Content(null);
                                 }
+
+                                //绑定手机号
                                 if (content.Length == 11 && long.TryParse(content, out long phone))
                                 {
                                     if (!RegularRegexHelper.CheckPhoneNumber(content))
                                     {
                                         return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "手机号码不正确"));
                                     }
+                                    using (var db = new dbContext())
+                                    {
+                                        if (db.TMemberWxPhone.Any(p => p.PhoneNumber == content))
+                                        {
+                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "此手机号码已绑定个人信息"));
+                                        }
+                                        if (!db.TMember.Any(p => p.PhoneNumber == content))
+                                        {
+                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "会员信息暂未录入，请稍后重试"));
+                                        }
+                                        TMemberWxPhone wxPhone = new TMemberWxPhone()
+                                        {
+                                            PhoneNumber = content,
+                                            WeixinCode = userOpenID,
+                                            CreateTime = DateTime.Now
+                                        };
+                                        db.Add(wxPhone);
+                                        if (db.SaveChanges() > 0)
+                                        {
+                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "绑定成功"));
+                                        }
+                                        return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "绑定失败，请稍后重试"));
+                                    }
                                 }
-                                else
+
+                                //关键词指令
+                                switch (content)
                                 {
-                                    return Content(null);
+                                    case "1":
+                                        //查看全部课程套餐
+                                        break;
+                                    case "2":
+                                        //查看我的课程套餐
+                                        break;
+                                    case "3":
+                                        //查看一个月内上课记录
+                                        break;
+                                    default:
+                                        break;
                                 }
-                                using (var db = new dbContext())
-                                {
-                                    if (db.TMemberWxPhone.Any(p => p.PhoneNumber == content))
-                                    {
-                                        return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "此手机号码已绑定个人信息"));
-                                    }
-                                    if (!db.TMember.Any(p => p.PhoneNumber == content))
-                                    {
-                                        return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "会员信息暂未录入，请稍后重试"));
-                                    }
-                                    TMemberWxPhone wxPhone = new TMemberWxPhone()
-                                    {
-                                        PhoneNumber = content,
-                                        WeixinCode = userOpenID,
-                                        CreateTime = DateTime.Now
-                                    };
-                                    db.Add(wxPhone);
-                                    if (db.SaveChanges() > 0)
-                                    {
-                                        return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "绑定成功"));
-                                    }
-                                    return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "绑定失败，请稍后重试"));
-                                }
+                                return Content(null);
                             }
                         default:
                             return Content(null);
