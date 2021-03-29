@@ -47,9 +47,9 @@ namespace WebApi.Controllers
                     string msgType = xmlElement.SelectSingleNode("MsgType").InnerText;              //消息类型
                     switch (msgType)
                     {
+                        // 事件类型
                         case "event":
                             {
-                                //事件类型
                                 string eventType = xmlElement.SelectSingleNode("Event").InnerText;
                                 switch (eventType)
                                 {
@@ -59,19 +59,20 @@ namespace WebApi.Controllers
                                             return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "终于等到你~\n\n请发送手机号码绑定会员信息"));
                                         }
                                     default:
-                                        return Content(null);
+                                        break;
                                 }
                             }
+                            break;
+                        // 消息类型
                         case "text":
                             {
-                                //消息类型
                                 string content = xmlElement.SelectSingleNode("Content").InnerText.Trim();      //消息内容
                                 if (string.IsNullOrWhiteSpace(content))
                                 {
                                     return Content(null);
                                 }
 
-                                //绑定手机号
+                                //绑定手机号码
                                 if (content.Length == 11 && long.TryParse(content, out long phone))
                                 {
                                     if (!RegularRegexHelper.CheckPhoneNumber(content))
@@ -103,26 +104,58 @@ namespace WebApi.Controllers
                                     }
                                 }
 
-                                //关键词指令
+                                // 关键词处理
                                 switch (content)
                                 {
+                                    // 查看全部课程套餐
                                     case "1":
-                                        //查看全部课程套餐
-                                        break;
+                                        {
+                                            using (var db = new dbContext())
+                                            {
+                                                List<string> courses = db.TCoursePackage.Where(p => !p.IsDelete).Select(p => p.Name).ToList();
+                                                if (courses == null)
+                                                {
+                                                    return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无课程信息"));
+                                                }
+                                                string courseInfoStr = $"全部课程如下：\n\n{string.Join("\n\n", courses)}";
+                                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, courseInfoStr));
+                                            }
+                                        }
+                                    // 查看我的课程套餐 
                                     case "2":
-                                        //查看我的课程套餐
-                                        break;
+                                        {
+                                            using (var db = new dbContext())
+                                            {
+                                                var data = (from m in db.TMember
+                                                            join w in db.TMemberWxPhone on m.PhoneNumber equals w.PhoneNumber
+                                                            join c in db.TCoursePackage on m.CoursePackageId equals c.Id
+                                                            where w.WeixinCode == userOpenID
+                                                            select new
+                                                            {
+                                                                contents = $"姓名：{m.ChildName}\n课程：{c.Name}\n剩余次数：{m.CourseCount}"
+                                                            }).ToList();
+                                                if (data == null)
+                                                {
+                                                    return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无课程信息"));
+                                                }
+                                                string myCourseInfoStr = $"您的课程信息如下：\n\n{string.Join("\n\n", data)}";
+                                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, myCourseInfoStr));
+                                            }
+                                        }
+                                    // 查看一个月内上课记录
                                     case "3":
-                                        //查看一个月内上课记录
                                         break;
                                     default:
                                         break;
                                 }
-                                return Content(null);
+
+                                //文本消息默认回复
+                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, $"童心教育机器人为你服务，发送关键词进行查询\n\n回复【1】查看全部课程套餐\n\n回复【2】查看我的课程套餐\n\n回复【3】查看一个月内上课记录"));
                             }
                         default:
-                            return Content(null);
+                            break;
                     }
+                    return Content(null);
                 }
             }
             catch (Exception)
