@@ -47,5 +47,19 @@ namespace Repository.Database
         /// 备注
         /// </summary>
         public string Remarks { get; set; }
+
+        /// <summary>
+        ///最近上课时间
+        /// </summary>
+        public DateTime? CourseUpdate { get; set; }
+
+        /// <summary>
+        ///最近上课时间
+        /// </summary>
+        public Guid? CourseUpdateUserId { get; set; }
+        /// <summary>
+        ///最近上课人
+        /// </summary>
+        public TUser CourseUpdateUser { get; set; }
     }
 }

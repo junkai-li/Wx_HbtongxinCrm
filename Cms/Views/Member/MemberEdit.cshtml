@@ -31,11 +31,16 @@
                         url: "/Member/MemberSave/",
                         data: $('#form1').serialize(),
                         success: function (result) {
-                            if (result == true) {
+                            if (result.status == true) {
                                 var index = parent.layer.getFrameIndex(window.name);
                                 parent.onloadDataTable();
                                 parent.layer.close(index);
-                            };
+                            } else {
+                                swal("Red marks are required!", {
+                                    icon: "error",
+                                    text: result.msg
+                                });
+                            }
                         }
                     });
 
