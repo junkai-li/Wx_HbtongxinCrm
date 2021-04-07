@@ -161,11 +161,15 @@ namespace WebApi.Controllers
                                                             join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
                                                             from g in g2.DefaultIfEmpty()
                                                             join c in db.TCoursePackage on m.CoursePackageId equals c.Id
-                                                            where w.WeixinCode == userOpenID && g.CreateTime > DateTime.Now.AddDays(-10)
+                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-10)
                                                             select new
                                                             {
                                                                 contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
                                                             });
+                                                if (data == null)
+                                                {
+                                                    return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
+                                                }
                                                 string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
@@ -180,11 +184,15 @@ namespace WebApi.Controllers
                                                             join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
                                                             from g in g2.DefaultIfEmpty()
                                                             join c in db.TCoursePackage on m.CoursePackageId equals c.Id
-                                                            where w.WeixinCode == userOpenID && g.CreateTime > DateTime.Now.AddDays(-20)
+                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-20)
                                                             select new
                                                             {
                                                                 contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
                                                             });
+                                                if (data == null)
+                                                {
+                                                    return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
+                                                }
                                                 string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
@@ -199,11 +207,15 @@ namespace WebApi.Controllers
                                                             join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
                                                             from g in g2.DefaultIfEmpty()
                                                             join c in db.TCoursePackage on m.CoursePackageId equals c.Id
-                                                            where w.WeixinCode == userOpenID && g.CreateTime > DateTime.Now.AddMonths(-1)
+                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddMonths(-1)
                                                             select new
                                                             {
                                                                 contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
                                                             });
+                                                if (data == null)
+                                                {
+                                                    return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
+                                                }
                                                 string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
