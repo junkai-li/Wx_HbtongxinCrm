@@ -104,6 +104,15 @@ namespace WebApi.Controllers
                                     }
                                 }
 
+                                //校验是否绑定手机号码
+                                using (var db = new dbContext())
+                                {
+                                    if (!db.TMemberWxPhone.Any(p => p.WeixinCode == userOpenID))
+                                    {
+                                        return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂未绑定手机号码，请发送手机号码进行绑定"));
+                                    }
+                                }
+
                                 // 关键词处理
                                 switch (content)
                                 {
@@ -142,15 +151,69 @@ namespace WebApi.Controllers
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, myCourseInfoStr));
                                             }
                                         }
-                                    // 查看一个月内上课记录
+                                    // 查看近十天上课记录
                                     case "3":
-                                        break;
+                                        {
+                                            using (var db = new dbContext())
+                                            {
+                                                var data = (from m in db.TMember
+                                                            join w in db.TMemberWxPhone on m.PhoneNumber equals w.PhoneNumber
+                                                            join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
+                                                            from g in g2.DefaultIfEmpty()
+                                                            join c in db.TCoursePackage on m.CoursePackageId equals c.Id
+                                                            where w.WeixinCode == userOpenID && g.CreateTime > DateTime.Now.AddDays(-10)
+                                                            select new
+                                                            {
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
+                                                            });
+                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
+                                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
+                                            }
+                                        }
+                                    // 查看近二十天上课记录
+                                    case "4":
+                                        {
+                                            using (var db = new dbContext())
+                                            {
+                                                var data = (from m in db.TMember
+                                                            join w in db.TMemberWxPhone on m.PhoneNumber equals w.PhoneNumber
+                                                            join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
+                                                            from g in g2.DefaultIfEmpty()
+                                                            join c in db.TCoursePackage on m.CoursePackageId equals c.Id
+                                                            where w.WeixinCode == userOpenID && g.CreateTime > DateTime.Now.AddDays(-20)
+                                                            select new
+                                                            {
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
+                                                            });
+                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
+                                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
+                                            }
+                                        }
+                                    // 查看近一个月上课记录
+                                    case "5":
+                                        {
+                                            using (var db = new dbContext())
+                                            {
+                                                var data = (from m in db.TMember
+                                                            join w in db.TMemberWxPhone on m.PhoneNumber equals w.PhoneNumber
+                                                            join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
+                                                            from g in g2.DefaultIfEmpty()
+                                                            join c in db.TCoursePackage on m.CoursePackageId equals c.Id
+                                                            where w.WeixinCode == userOpenID && g.CreateTime > DateTime.Now.AddMonths(-1)
+                                                            select new
+                                                            {
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
+                                                            });
+                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
+                                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
+                                            }
+                                        }
                                     default:
                                         break;
                                 }
 
                                 //文本消息默认回复
-                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, $"童心教育机器人为你服务，发送关键词进行查询\n\n回复【1】查看全部课程套餐\n\n回复【2】查看我的课程套餐\n\n回复【3】查看一个月内上课记录"));
+                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, $"童心教育机器人为你服务，发送关键词进行查询\n\n回复【1】查看全部课程套餐\n\n回复【2】查看我的课程套餐\n\n回复【3】查看近十天上课记录\n\n回复【4】查看近二十天上课记录\n\n回复【5】查看近一个月上课记录"));
                             }
                         default:
                             break;
