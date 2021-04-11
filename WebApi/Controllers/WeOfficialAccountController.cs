@@ -13,21 +13,21 @@ using System.Xml;
 namespace WebApi.Controllers
 {
     [ApiVersionNeutral]
-    [Route("api/[controller]")]
+    [Route("api/WeOfficialAccount/[action]")]
     [ApiController]
     public class WeOfficialAccountController : ControllerBase
     {
         private readonly static string _defaultMessage = "童心教育机器人为你服务，发送关键词进行查询\n\n回复【1】查看全部课程套餐\n\n回复【2】查看我的课程套餐\n\n回复【3】查看近十天上课记录\n\n回复【4】查看近二十天上课记录\n\n回复【5】查看近一个月上课记录";
 
         #region 公众号自动回复服务
-        [HttpGet("RobotsReply")]
+        [HttpGet]
         public ContentResult RobotsReply(string signature, string timestamp, string nonce, string echostr)
         {
             //暂不验证
             return Content(string.IsNullOrWhiteSpace(echostr) ? "success" : echostr);
         }
 
-        [HttpPost("RobotsReply")]
+        [HttpPost]
         public ContentResult RobotsReply()
         {
             try
@@ -166,7 +166,7 @@ namespace WebApi.Controllers
                                                             where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-10)
                                                             select new
                                                             {
-                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间：{g.CreateTime.ToString("MM月dd日 HH点")}\n上课时间仅供参考"
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间：{g.CreateTime:MM月dd日 HH点}\n上课时间仅供参考"
                                                             });
                                                 if (data == null)
                                                 {
@@ -189,7 +189,7 @@ namespace WebApi.Controllers
                                                             where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-20)
                                                             select new
                                                             {
-                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("MM月dd日 HH点")}\n上课时间仅供参考"
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime:MM月dd日 HH点}\n上课时间仅供参考"
                                                             });
                                                 if (data == null)
                                                 {
@@ -212,7 +212,7 @@ namespace WebApi.Controllers
                                                             where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddMonths(-1)
                                                             select new
                                                             {
-                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("MM月dd日 HH点")}\n上课时间仅供参考}"
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime:MM月dd日 HH点}\n上课时间仅供参考"
                                                             });
                                                 if (data == null)
                                                 {
