@@ -175,7 +175,7 @@ namespace WebApi.Controllers
                                                                 ChildName = m.ChildName,
                                                                 CreateTime = g.CreateTime.ToString("MM月dd号 HH点"),
                                                             }).ToList();
-                                                if (data == null)
+                                                if (data.Count == 0)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
@@ -203,7 +203,7 @@ namespace WebApi.Controllers
                                                                 ChildName = m.ChildName,
                                                                 CreateTime = g.CreateTime.ToString("MM月dd号 HH点"),
                                                             }).ToList();
-                                                if (data == null)
+                                                if (data.Count == 0)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
@@ -231,7 +231,7 @@ namespace WebApi.Controllers
                                                                 ChildName = m.ChildName,
                                                                 CreateTime = g.CreateTime.ToString("MM月dd号 HH点"),
                                                             }).ToList();
-                                                if (data == null)
+                                                if (data.Count == 0)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
