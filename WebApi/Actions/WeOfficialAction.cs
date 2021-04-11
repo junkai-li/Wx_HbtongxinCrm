@@ -17,20 +17,20 @@ namespace WebApi.Actions
             string hangcontent = "{0}";
             for (int i = 2; i < MaxChildNameLength; i++)
             {
-                hangcontent += "&#160;";
+                hangcontent += "\t";
             }
             if (2 == MaxChildNameLength)
             {
-                hangcontent += "&#160;";
-            }
+                hangcontent += "\t";
+            } 
             hangcontent += "{1}";
             for (int i = 3; i < MaxNameLength; i++)
             {
-                hangcontent += "&#160;";
+                hangcontent += "\t";
             }
             if (3 == MaxNameLength)
             {
-                hangcontent += "&#160;";
+                hangcontent += "\t";
             }
             hangcontent += "{2}\n";
             var hang = string.Format(hangcontent, "姓名", "课程名", "上课时间");
@@ -40,20 +40,20 @@ namespace WebApi.Actions
                 string itemcontent = "{0}";
                 for (int i = item.ChildName.Length; i < MaxChildNameLength; i++)
                 {
-                    itemcontent += "&#160;";
+                    itemcontent += "\t";
                 }
                 if (item.ChildName.Length == MaxChildNameLength)
                 {
-                    itemcontent += "&#160;";
+                    itemcontent += "\t";
                 }
                 itemcontent += "{1}";
                 for (int i = item.Name.Length; i < MaxNameLength; i++)
                 {
-                    itemcontent += "&#160;";
+                    itemcontent += "\t";
                 }
                 if (item.Name.Length == MaxNameLength)
                 {
-                    itemcontent += "&#160;";
+                    itemcontent += "\t";
                 }
                 itemcontent += "{2}\n";
                 var cont = string.Format(itemcontent, item.ChildName, item.Name, item.CreateTime);
