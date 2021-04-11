@@ -166,7 +166,7 @@ namespace WebApi.Controllers
                                                             where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-10)
                                                             select new
                                                             {
-                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间：{g.CreateTime.ToString("MM月dd日 HH点")}\n上课时间仅供参考"
                                                             });
                                                 if (data == null)
                                                 {
