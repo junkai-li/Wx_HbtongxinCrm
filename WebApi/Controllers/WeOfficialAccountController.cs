@@ -149,7 +149,7 @@ namespace WebApi.Controllers
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无课程信息"));
                                                 }
-                                                string myCourseInfoStr = $"您的课程信息如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
+                                                string myCourseInfoStr = $"您的课程信息如下：\n{string.Join("\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, myCourseInfoStr));
                                             }
                                         }
@@ -172,7 +172,7 @@ namespace WebApi.Controllers
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
+                                                string infoStr = $"上课记录如下：\n{string.Join("\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -189,13 +189,13 @@ namespace WebApi.Controllers
                                                             where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-20)
                                                             select new
                                                             {
-                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("MM月dd日 HH点")}\n上课时间仅供参考"
                                                             });
                                                 if (data == null)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
+                                                string infoStr = $"上课记录如下：\n{string.Join("\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -212,13 +212,13 @@ namespace WebApi.Controllers
                                                             where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddMonths(-1)
                                                             select new
                                                             {
-                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("yyyy年MM月dd日 HH:mm:ss")}"
+                                                                contents = $"课程：{c.Name}\n上课次数：{g.GoCourseCount}\n上课时间{g.CreateTime.ToString("MM月dd日 HH点")}\n上课时间仅供参考}"
                                                             });
                                                 if (data == null)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
+                                                string infoStr = $"上课记录如下：\n{string.Join("\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
