@@ -17,6 +17,8 @@ namespace WebApi.Controllers
     [ApiController]
     public class WeOfficialAccountController : ControllerBase
     {
+        private readonly static string _defaultMessage = "童心教育机器人为你服务，发送关键词进行查询\n\n回复【1】查看全部课程套餐\n\n回复【2】查看我的课程套餐\n\n回复【3】查看近十天上课记录\n\n回复【4】查看近二十天上课记录\n\n回复【5】查看近一个月上课记录";
+
         #region 公众号自动回复服务
         [HttpGet("RobotsReply")]
         public ContentResult RobotsReply(string signature, string timestamp, string nonce, string echostr)
@@ -87,7 +89,7 @@ namespace WebApi.Controllers
                                         }
                                         if (!db.TMember.Any(p => p.PhoneNumber == content))
                                         {
-                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "会员信息暂未录入，请稍后重试"));
+                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "您的会员信息暂未录入，请联系工作人员"));
                                         }
                                         TMemberWxPhone wxPhone = new TMemberWxPhone()
                                         {
@@ -98,7 +100,7 @@ namespace WebApi.Controllers
                                         db.Add(wxPhone);
                                         if (db.SaveChanges() > 0)
                                         {
-                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "绑定成功"));
+                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, $"绑定成功，{_defaultMessage}"));
                                         }
                                         return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "绑定失败，请稍后重试"));
                                     }
@@ -109,7 +111,7 @@ namespace WebApi.Controllers
                                 {
                                     if (!db.TMemberWxPhone.Any(p => p.WeixinCode == userOpenID))
                                     {
-                                        return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂未绑定手机号码，请发送手机号码进行绑定"));
+                                        return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "河北童心教育机构智能机器人提示您,暂未绑定手机号码，请发送手机号码进行绑定"));
                                     }
                                 }
 
@@ -147,7 +149,7 @@ namespace WebApi.Controllers
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无课程信息"));
                                                 }
-                                                string myCourseInfoStr = $"您的课程信息如下：\n\n{string.Join("\n\n", data)}";
+                                                string myCourseInfoStr = $"您的课程信息如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, myCourseInfoStr));
                                             }
                                         }
@@ -170,7 +172,7 @@ namespace WebApi.Controllers
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
+                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -193,7 +195,7 @@ namespace WebApi.Controllers
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
+                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -216,7 +218,7 @@ namespace WebApi.Controllers
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data)}";
+                                                string infoStr = $"上课记录如下：\n\n{string.Join("\n\n", data.Select(p => p.contents))}";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -225,7 +227,7 @@ namespace WebApi.Controllers
                                 }
 
                                 //文本消息默认回复
-                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, $"童心教育机器人为你服务，发送关键词进行查询\n\n回复【1】查看全部课程套餐\n\n回复【2】查看我的课程套餐\n\n回复【3】查看近十天上课记录\n\n回复【4】查看近二十天上课记录\n\n回复【5】查看近一个月上课记录"));
+                                return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, _defaultMessage));
                             }
                         default:
                             break;
