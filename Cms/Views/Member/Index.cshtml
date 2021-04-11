@@ -134,6 +134,7 @@
                     { "data": "coursePackage.name" },
                     { "data": "courseCount" },
                     { "data": "phoneNumber" },
+                    { "data": "courseUpdate" },
                     { "data": "createTime" },
                     { "data": "createUser.name" },
                     { "data": null },
@@ -142,14 +143,14 @@
                 "columnDefs": [
                     {
                         "orderable": false,
-                        "targets": [9],
+                        "targets": [10],
                         "render": function (data, type, row) { 
                             return "<a  style='height: 25px;line-height: 25px;' class='layui-btn' href=\"javascript:showUserEdit('" + data.id + "')\" >编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a  href=\"javascript:DeleteUser('" + data.id + "');\"'>删除</a>";
                         }
                     }
                     , {
                         "orderable": false,
-                        "targets": [10],
+                        "targets": [11],
                         "render": function (data, type, row) { 
                             return "<a href=\"javascript:GoMember('" + data.id + "')\" style='height: 25px;line-height: 25px;' class='layui-btn' >上课</a>&nbsp;&nbsp;&nbsp;&nbsp;<a   style='height: 25px;line-height: 25px;' class='layui-btn' href='/Member/IndexGoLog?memberid=" + data.id +"' >上课记录</a>";
                            
@@ -245,10 +246,11 @@
                         <th width="8%">班级名称</th>
                         <th width="5%">家长</th>
                         <th width="5%">孩子</th>
-                        <th width="10%">课程名称</th>
-                        <th width="10%">课程次数</th>
-                        <th width="10%">电话</th>
-                        <th width="15%">创建时间</th>
+                        <th width="8%">课程名称</th>
+                        <th width="8%">课程次数</th>
+                        <th width="8%">电话</th>
+                        <th width="10%">最近上课时间</th>
+                        <th width="10%">创建时间</th>
                         <th width="5%">创建人</th>
                         <th width="10%">操作</th>
                         <th width="24%">操作</th>

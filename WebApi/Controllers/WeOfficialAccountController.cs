@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using WebApi.Actions;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -140,10 +142,10 @@ namespace WebApi.Controllers
                                                 var data = (from m in db.TMember
                                                             join w in db.TMemberWxPhone on m.PhoneNumber equals w.PhoneNumber
                                                             join c in db.TCoursePackage on m.CoursePackageId equals c.Id
-                                                            where w.WeixinCode == userOpenID
+                                                            where w.WeixinCode == userOpenID && m.IsDelete==false  
                                                             select new
                                                             {
-                                                                contents = $"姓名：{m.ChildName}\n课程：{c.Name}\n剩余次数：{m.CourseCount}"
+                                                                contents = $"{m.ChildName}的{c.Name}剩余：{m.CourseCount}次"
                                                             }).ToList();
                                                 if (data == null)
                                                 {
@@ -163,16 +165,21 @@ namespace WebApi.Controllers
                                                             join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
                                                             from g in g2.DefaultIfEmpty()
                                                             join c in db.TCoursePackage on m.CoursePackageId equals c.Id
-                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-10)
-                                                            select new
+                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-10) && m.IsDelete == false
+                                                            orderby g.CreateTime descending
+                                                            select new WxinFoStrDto
                                                             {
-                                                                contents = $"课程：{c.Name}  上课次数：{g.GoCourseCount}  上课时间：{g.CreateTime:MM月dd日 HH点}"
-                                                            });
+                                                                ChildNameLength = m.ChildName.Length,
+                                                                NameLength = c.Name.Length,
+                                                                Name = c.Name,
+                                                                ChildName = m.ChildName,
+                                                                CreateTime = g.CreateTime.ToString("MM月dd号 HH点"),
+                                                            }).ToList();
                                                 if (data == null)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n{string.Join("\n", data.Select(p => p.contents))}" + "\n上课时间仅供参考";
+                                                string infoStr = WeOfficialAction.GetWxinfoStr(data);
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -180,22 +187,27 @@ namespace WebApi.Controllers
                                     case "4":
                                         {
                                             using (var db = new dbContext())
-                                            {
+                                            { 
                                                 var data = (from m in db.TMember
                                                             join w in db.TMemberWxPhone on m.PhoneNumber equals w.PhoneNumber
                                                             join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
                                                             from g in g2.DefaultIfEmpty()
                                                             join c in db.TCoursePackage on m.CoursePackageId equals c.Id
-                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-20)
-                                                            select new
+                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddDays(-20) && m.IsDelete == false
+                                                            orderby g.CreateTime descending
+                                                            select new WxinFoStrDto
                                                             {
-                                                                contents = $"课程：{c.Name} 上课次数：{g.GoCourseCount}  上课时间{g.CreateTime:MM月dd日 HH点}"
-                                                            });
+                                                                ChildNameLength = m.ChildName.Length,
+                                                                NameLength = c.Name.Length,
+                                                                Name = c.Name,
+                                                                ChildName = m.ChildName,
+                                                                CreateTime = g.CreateTime.ToString("MM月dd号 HH点"),
+                                                            }).ToList();
                                                 if (data == null)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n{string.Join("\n", data.Select(p => p.contents))}"+ "\n上课时间仅供参考";
+                                                string infoStr = WeOfficialAction.GetWxinfoStr(data);
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -209,16 +221,21 @@ namespace WebApi.Controllers
                                                             join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
                                                             from g in g2.DefaultIfEmpty()
                                                             join c in db.TCoursePackage on m.CoursePackageId equals c.Id
-                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddMonths(-1)
-                                                            select new
+                                                            where w.WeixinCode == userOpenID && g.CreateTime >= DateTime.Now.AddMonths(-1) && m.IsDelete == false
+                                                            orderby  g.CreateTime descending
+                                                            select new WxinFoStrDto
                                                             {
-                                                                contents = $"课程：{c.Name}  上课次数：{g.GoCourseCount}  上课时间{g.CreateTime:MM月dd日 HH点}"
-                                                            });
+                                                                ChildNameLength = m.ChildName.Length,
+                                                                NameLength = c.Name.Length,
+                                                                Name = c.Name,
+                                                                ChildName = m.ChildName,
+                                                                CreateTime = g.CreateTime.ToString("MM月dd号 HH点"),
+                                                            }).ToList();
                                                 if (data == null)
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无上课记录"));
                                                 }
-                                                string infoStr = $"上课记录如下：\n{string.Join("\n", data.Select(p => p.contents))}"+ "\n上课时间仅供参考";
+                                                string infoStr = WeOfficialAction.GetWxinfoStr(data);
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, infoStr));
                                             }
                                         }
@@ -238,6 +255,33 @@ namespace WebApi.Controllers
             catch (Exception)
             {
                 return Content(null);
+            }
+        }
+
+
+        [HttpGet]
+        public string ceshi()
+        {
+            using (var db = new dbContext())
+            {
+                var data = (from m in db.TMember
+                            join w in db.TMemberWxPhone on m.PhoneNumber equals w.PhoneNumber
+                            join g in db.TMenmberGoLog on m.Id equals g.MemberId into g2
+                            from g in g2.DefaultIfEmpty()
+                            join c in db.TCoursePackage on m.CoursePackageId equals c.Id
+                            where m.IsDelete == false
+                            orderby g.CreateTime descending
+                            select new WxinFoStrDto
+                            {
+                                ChildNameLength = m.ChildName.Length,
+                                NameLength = c.Name.Length,
+                                Name = c.Name,
+                                ChildName = m.ChildName,
+                                CreateTime = g.CreateTime.ToString("MM月dd号 HH点"),
+                            }).ToList(); ;
+                string infoStr = WeOfficialAction.GetWxinfoStr(data);
+                return infoStr;
+
             }
         }
         #endregion
