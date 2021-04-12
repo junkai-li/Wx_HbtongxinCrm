@@ -19,7 +19,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class WeOfficialAccountController : ControllerBase
     {
-        private readonly static string _defaultMessage = "童心教育机器人为你服务，发送关键词进行查询\n\n回复【1】查看全部课程套餐\n\n回复【2】查看我的课程套餐\n\n回复【3】查看近十天上课记录\n\n回复【4】查看近二十天上课记录\n\n回复【5】查看近一个月上课记录";
+        private readonly static string _defaultMessage = "童心教育机器人为你服务，发送关键词进行查询\n回复【1】查看全部课程套餐\n回复【2】查看我的课程套餐\n回复【3】查看近十天上课记录\n回复【4】查看近二十天上课记录\n回复【5】查看近一个月上课记录";
 
         #region 公众号自动回复服务
         [HttpGet]
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
                                     case "subscribe":
                                         {
                                             //订阅事件
-                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "终于等到你~\n\n请发送手机号码绑定会员信息"));
+                                            return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "河北童心教育机构终于等到您~\n请发送手机号码绑定会员信息"));
                                         }
                                     default:
                                         break;
@@ -130,7 +130,7 @@ namespace WebApi.Controllers
                                                 {
                                                     return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, "暂无课程信息"));
                                                 }
-                                                string courseInfoStr = $"全部课程如下：\n\n{string.Join("\n\n", courses)}";
+                                                string courseInfoStr = $"全部课程如下：\n{string.Join("\n", courses)}"+ "\n\n想了解课程详细联系：17610798328  \n手机号码与微信号同号噢";
                                                 return Content(WeOfficialAccountReplyHelper.TextReply(userOpenID, developID, courseInfoStr));
                                             }
                                         }
