@@ -32,7 +32,7 @@ namespace Cms.Controllers
                 var recordsTotal = query.Count();
                 if (!string.IsNullOrEmpty(search))
                 {
-                    query = query.Where(t => t.ChildName.Contains(search) || t.ParentName.Contains(search) || t.PhoneNumber.Contains(search) || t.CoursePackage.Name.Contains(search) || t.SchoolName.Contains(search));
+                    query = query.Where(t => t.ChildName.Contains(search) || t.ParentName.Contains(search) || t.PhoneNumber.Contains(search) || t.CoursePackage.Name.Contains(search) || t.SchoolName.Contains(search) || t.Remarks.Contains(search));
                 }
                 if (!string.IsNullOrEmpty(select))
                 {
@@ -109,6 +109,7 @@ namespace Cms.Controllers
                     dbUserSys.UpdateTime = user.UpdateTime;
                     dbUserSys.UpdateUserId = userid;
                     dbUserSys.Remarks = user.Remarks;
+                    dbUserSys.Class = user.Class;
                 }
 
                 db.SaveChanges();

@@ -114,7 +114,7 @@ namespace Cms.Controllers
                     user.IsDelete = false;
                     user.CreateTime = DateTime.Now;
 
-                    user.RoleId = Guid.Parse("136A214E-7523-42F2-9760-8EED42B31BA1");
+                    user.RoleId = Guid.Parse("3685A158-1325-C66A-848F-E7842292884A");
 
                     db.TUser.Add(user);
                 }
